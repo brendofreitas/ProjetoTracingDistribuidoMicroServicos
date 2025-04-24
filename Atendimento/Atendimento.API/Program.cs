@@ -6,6 +6,7 @@ using Atendimento.Application.CasoDeUso.Cliente;
 using Atendimento.Application.CasoDeUso.Pedido;
 using Atendimento.Application.Interfaces;
 using Atendimento.Infrastructure.External;
+using Npgsql;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,10 +29,17 @@ builder.Services.AddOpenTelemetry()
     {
         var jaegerEndpoint = builder.Configuration["Jaeger:Endpoint"];
         tracer
-            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Atendimento"))
+             .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                .AddService("Atendimento")
+                .AddAttributes(new Dictionary<string, object>
+                {
+                    { "service.name", "Atendimento" },
+                    { "service.version", "1.0.0" }
+                }))
             .SetSampler(new TraceIdRatioBasedSampler(0.2))
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation()
+            .AddNpgsql()
             .AddOtlpExporter(options =>
             {
                 options.Endpoint = new Uri(jaegerEndpoint);

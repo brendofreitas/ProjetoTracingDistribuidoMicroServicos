@@ -3,6 +3,7 @@ using Deposito.Application.Contracts;
 using Deposito.Infrastructure.DependencyInjection;
 using Deposito.Infrastructure.ExternalServices.Deposito;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -24,15 +25,22 @@ builder.Services.AddOpenTelemetry()
     {
         var jaegerEndpoint = builder.Configuration["Jaeger:Endpoint"];
         tracer
-            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Deposito.API"))
-            .AddAspNetCoreInstrumentation()          
+            .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                .AddService("Deposito.API")
+                .AddAttributes(new Dictionary<string, object>
+                {
+                    { "service.name", "Deposito.API" },
+                    { "service.version", "1.0.0" }
+                }))
+            .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation()
+            .AddNpgsql()
             .AddOtlpExporter(options =>
             {
                 options.Endpoint = new Uri(jaegerEndpoint);
                 options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
             });
-            
+
     });
 
 
