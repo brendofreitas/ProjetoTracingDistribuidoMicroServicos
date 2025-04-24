@@ -16,9 +16,6 @@ packages/
 project.lock.json
 project.fragment.lock.json
 
-## Migrations geradas por EF (opcional, se você quiser manter versionadas, remova essa linha)
-**/Migrations/
-
 ## Arquivos do Rider e VS Code
 .idea/
 .vscode/
