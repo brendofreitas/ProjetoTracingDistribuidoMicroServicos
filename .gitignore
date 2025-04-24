@@ -1,0 +1,70 @@
+## Ignore arquivos de build, pacotes e temporários do .NET
+bin/
+obj/
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Ignora arquivos de pacotes NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+
+## Migrations geradas por EF (opcional, se você quiser manter versionadas, remova essa linha)
+**/Migrations/
+
+## Arquivos do Rider e VS Code
+.idea/
+.vscode/
+*.code-workspace
+
+## Configurações locais do Visual Studio
+.vs/
+*.dbmdl
+*.pidb
+*.psess
+*.vsp
+*.vspx
+*.vspscc
+*.vssscc
+*.ncb
+*.sbr
+
+## Arquivos do sistema operacional
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## Docker
+**/*.env
+**/.docker-compose.override.yml
+**/docker-compose.*.override.yml
+
+## Logs
+*.log
+logs/
+**/logs/
+
+## Arquivos sensíveis
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+## Ignore resultados de testes
+TestResults/
+*.coverage
+*.coveragexml
+
+## Arquivos gerados por ferramentas de rastreamento
+*.opentelemetry.*
+*.jaeger.*

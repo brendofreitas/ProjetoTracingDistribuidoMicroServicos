@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Atendimento.Domain.Entities.Cliente>
+
+@{
+    ViewData["Title"] = "Lista de Clientes";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<a class="btn btn-primary mb-3" href="/Cliente/Create">Novo Cliente</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cliente in Model)
+        {
+            <tr>
+                <td>@cliente.Nome</td>
+                <td>@cliente.Email</td>
+                <td>
+                    <a class="btn btn-info btn-sm" href="/Cliente/Details/@cliente.Id">Detalhes</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

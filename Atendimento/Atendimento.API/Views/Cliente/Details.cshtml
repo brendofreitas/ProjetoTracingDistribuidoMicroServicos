@@ -1,0 +1,46 @@
+﻿@model Atendimento.Domain.Entities.Cliente
+
+@{
+    ViewData["Title"] = "Detalhes do Cliente";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="mb-3">
+    <strong>Nome:</strong> @Model.Nome
+</div>
+<div class="mb-3">
+    <strong>Email:</strong> @Model.Email
+</div>
+
+<h3>Pedidos</h3>
+@if (Model.Pedidos != null && Model.Pedidos.Any())
+{
+    <ul>
+        @foreach (var pedido in Model.Pedidos)
+        {
+            <li>Pedido ID: @pedido.Id</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Nenhum pedido encontrado.</p>
+}
+
+<h3>Interações</h3>
+@if (Model.Interacoes != null && Model.Interacoes.Any())
+{
+    <ul>
+        @foreach (var interacao in Model.Interacoes)
+        {
+            <li>@interacao.Mensagem</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Nenhuma interação registrada.</p>
+}
+
+<a href="/Cliente" class="btn btn-secondary mt-3">Voltar</a>

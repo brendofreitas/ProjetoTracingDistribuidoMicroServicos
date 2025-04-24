@@ -1,0 +1,36 @@
+﻿@using Atendimento.Application.DTOs
+@model List<ProdutoDto>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Produtos";
+}
+
+@if (TempData["Mensagem"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Mensagem"]
+    </div>
+}
+
+<h1 class="mb-4">Produtos</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var produto in Model)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <img src="@produto.ImagemUrl" class="card-img-top" alt="@produto.Nome" style="height: 200px; object-fit: cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@produto.Nome</h5>
+                    <p class="card-text">@produto.Descricao</p>
+                    <p class="card-text"><strong>Preço:</strong> R$ @produto.Preco</p>
+                    <form asp-action="Comprar" method="post">
+                        <input type="hidden" name="produtoId" value="@produto.Id" />
+                        <button type="submit" class="btn btn-success mt-2 w-100">Comprar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

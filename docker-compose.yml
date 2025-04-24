@@ -1,0 +1,86 @@
+﻿version: '3.8'
+
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.53
+    container_name: jaeger
+    ports:
+      - "16686:16686"   # Jaeger UI
+      - "6831:6831/udp" # Agent (UDP)
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "4317:4317"     # OTLP gRPC (para OpenTelemetry Exporter)
+    networks:
+      - otel-demo
+
+  postgres_atendimento:
+    image: postgres:16
+    container_name: postgres_atendimento
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: atendimento  # Banco de dados atendimento
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_atendimento:/var/lib/postgresql/data
+    networks:
+      - otel-demo
+
+  postgres_deposito:
+    image: postgres:16
+    container_name: postgres_deposito
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: deposito  # Banco de dados deposito
+    ports:
+      - "5433:5432"  # Mapeando para porta diferente para evitar conflitos
+    volumes:
+      - postgres_data_deposito:/var/lib/postgresql/data
+    networks:
+      - otel-demo
+
+  atendimento-api:
+    build:
+      context: .
+      dockerfile: Atendimento/Atendimento.API/Dockerfile
+    container_name: atendimento-api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres_atendimento;Port=5432;Database=atendimento;Username=user;Password=password
+      - Jaeger__Endpoint=http://jaeger:4317
+      - Apideposito__Endpoint=http://deposito-api:8080
+    depends_on:
+      - postgres_atendimento
+      - jaeger
+    networks:
+      - otel-demo
+
+  deposito-api:
+    build:
+      context: .
+      dockerfile: Deposito/Deposito.API/Dockerfile
+    command: dotnet ef database update --project Deposito/Deposito.API/Deposito.API.csproj
+    container_name: deposito-api
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres_deposito;Port=5432;Database=deposito;Username=user;Password=password
+      - Jaeger__Endpoint=http://jaeger:4317
+    depends_on:
+      - postgres_deposito
+      - atendimento-api
+      - jaeger
+    networks:
+      - otel-demo
+
+networks:
+  otel-demo:
+
+volumes:
+  postgres_data_atendimento:
+  postgres_data_deposito:
