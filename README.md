@@ -94,7 +94,7 @@ dotnet build Deposito/Deposito.API/Deposito.API.csproj
 
 1. **Clone o repositório**
    ```bash
-   git clone https://github.com/brendofreitas/ProjetoTracingDistribuido.git
+   git clone https://github.com/brendofreitas/ProjetoTracingDistribuidoMicroServicos.git
 
 2. **Subir o ambiente com Docker**
    ```bash
